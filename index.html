@@ -1,41 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Factory Laser | Estación de Grabado</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Factory Laser – Personalizador de Virola</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
 <h1>Factory Laser</h1>
-<p class="subtitle">Estación de Grabado de Virola</p>
+<p>Previsualizá tu grabado en la virola</p>
 
-<div class="editor">
-  <div class="preview" id="preview"></div>
+<div class="contenedor">
 
-  <div class="controls">
+  <svg id="preview" viewBox="0 0 400 400">
+    <!-- Virola -->
+    <circle cx="200" cy="200" r="150" fill="none" stroke="#999" stroke-width="20"/>
+
+    <!-- Path circular -->
+    <defs>
+      <path
+        id="textoCircular"
+        d="
+          M 200,200
+          m -150,0
+          a 150,150 0 1,1 300,0
+          a 150,150 0 1,1 -300,0
+        "
+      />
+    </defs>
+
+    <!-- Texto -->
+    <text font-size="28" fill="#000">
+      <textPath
+        id="textoPreview"
+        href="#textoCircular"
+        startOffset="50%"
+        text-anchor="middle"
+      >
+        TU TEXTO ACÁ
+      </textPath>
+    </text>
+
+  </svg>
+
+  <div class="controles">
     <label>Texto a grabar</label>
-    <input type="text" id="texto" placeholder="Ej: Juan 2025">
-
-    <label>Tipografía</label>
-    <select id="fuente">
-      <option value="Arial">Arial</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Courier New">Courier</option>
-      <option value="Times New Roman">Times</option>
-    </select>
-
-    <label>Tamaño</label>
-    <input type="range" id="tamano" min="20" max="45" value="32">
-
-    <button onclick="descargarSVG()">Descargar diseño</button>
+    <input
+      type="text"
+      id="textoInput"
+      placeholder="Escribí tu texto"
+      maxlength="60"
+    />
   </div>
-</div>
 
-<p class="nota">
-  Todos los diseños son revisados antes de grabar.
-</p>
+</div>
 
 <script src="script.js"></script>
 </body>
