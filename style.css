@@ -16,9 +16,9 @@ svg {
   height: 300px;
   background: #ffffff;
   border-radius: 50%;
-  border: 18px solid #e0e0e0;
-  box-sizing: border-box;
-  
+  outline: 18px solid #e0e0e0;
+  outline-offset: -18px;
+
 }
 
 .controles {
