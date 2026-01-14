@@ -12,24 +12,44 @@
 
   <div class="contenedor">
 
-    <svg id="preview" viewBox="0 0 400 400">
+    <svg id="preview" viewBox="0 0 420 420">
 
-      <!-- ÚNICO aro gris (virola) -->
+      <!-- Contorno exterior negro fino -->
       <circle
-        cx="200"
-        cy="200"
+        cx="210"
+        cy="210"
+        r="162"
+        fill="none"
+        stroke="#000000"
+        stroke-width="2"
+      />
+
+      <!-- Contorno interior negro fino -->
+      <circle
+        cx="210"
+        cy="210"
+        r="138"
+        fill="none"
+        stroke="#000000"
+        stroke-width="2"
+      />
+
+      <!-- Aro gris principal -->
+      <circle
+        cx="210"
+        cy="210"
         r="150"
         fill="none"
         stroke="#cfcfcf"
         stroke-width="35"
       />
 
-      <!-- Path invisible para guiar el texto -->
+      <!-- Path invisible para texto -->
       <defs>
         <path
           id="textoCircular"
           d="
-            M 200,200
+            M 210,210
             m -150,0
             a 150,150 0 1,1 300,0
             a 150,150 0 1,1 -300,0
@@ -37,8 +57,8 @@
         />
       </defs>
 
-      <!-- Texto circular -->
-      <text font-size="26" fill="#000" dominant-baseline="middle"">
+      <!-- Texto circular centrado -->
+      <text font-size="26" fill="#000" dominant-baseline="middle" dy="2">
         <textPath
           id="textoPreview"
           href="#textoCircular"
@@ -66,4 +86,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
