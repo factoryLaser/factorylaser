@@ -9,12 +9,10 @@ body {
   align-items: center;
 }
 
-/* SVG / previsualización */
+/* Tamaño REAL de la virola en pantalla */
 #preview {
   width: 300px;
   height: 300px;
-  background: #ffffff;
-  border-radius: 50%;
 }
 
 /* Controles */
