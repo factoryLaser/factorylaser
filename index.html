@@ -7,53 +7,63 @@
 </head>
 <body>
 
-<h1>Factory Laser</h1>
-<p>Previsualizá tu grabado en la virola</p>
+  <h1>Factory Laser</h1>
+  <p>Previsualizá tu grabado en la virola</p>
 
-<div class="contenedor">
+  <div class="contenedor">
 
-  <svg id="preview" viewBox="0 0 400 400">
-    <!-- Virola -->
-/>
-    <!-- Path circular -->
-    <defs>
-      <path
-        id="textoCircular"
-        d="
-          M 200,200
-          m -150,0
-          a 150,150 0 1,1 300,0
-          a 150,150 0 1,1 -300,0
-        "
+    <svg id="preview" viewBox="0 0 400 400">
+
+      <!-- Aro de la virola -->
+      <circle
+        cx="200"
+        cy="200"
+        r="150"
+        fill="none"
+        stroke="#e0e0e0"
+        stroke-width="20"
       />
-    </defs>
 
-    <!-- Texto -->
-    <text font-size="28" fill="#000" dy="6">
-      <textPath
-        id="textoPreview"
-        href="#textoCircular"
-        startOffset="50%"
-        text-anchor="middle"
-      >
-        TU TEXTO ACÁ
-      </textPath>
-    </text>
+      <!-- Path invisible para el texto -->
+      <defs>
+        <path
+          id="textoCircular"
+          d="
+            M 200,200
+            m -150,0
+            a 150,150 0 1,1 300,0
+            a 150,150 0 1,1 -300,0
+          "
+        />
+      </defs>
 
-  </svg>
+      <!-- Texto circular -->
+      <text font-size="28" fill="#000" dy="6">
+        <textPath
+          id="textoPreview"
+          href="#textoCircular"
+          startOffset="50%"
+          text-anchor="middle"
+        >
+          TU TEXTO ACÁ
+        </textPath>
+      </text>
 
-  <div class="controles">
-    <label>Texto a grabar</label>
-    <input
-      type="text"
-      id="textoInput"
-      placeholder="Escribí tu texto"
-      maxlength="60"
-    />
+    </svg>
+
+    <div class="controles">
+      <label>Texto a grabar</label>
+      <input
+        type="text"
+        id="textoInput"
+        placeholder="Escribí tu texto"
+        maxlength="60"
+      />
+    </div>
+
   </div>
 
-</div>
+  <script src="script.js"></script>
 
-<script src="script.js"></script>
 </body>
 </html>
