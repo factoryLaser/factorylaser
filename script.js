@@ -1,6 +1,8 @@
-const input = document.getElementById("textoInput");
-const texto = document.getElementById("textoPreview");
+// Capturamos el input y el texto circular
+const textoInput = document.getElementById('textoInput');
+const textoPreview = document.getElementById('textoPreview');
 
-input.addEventListener("input", () => {
-  texto.textContent = input.value || "TU TEXTO ACÁ";
+textoInput.addEventListener('input', () => {
+  // Actualizamos el texto en tiempo real
+  textoPreview.textContent = textoInput.value || 'TU TEXTO ACÁ';
 });
