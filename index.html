@@ -14,30 +14,23 @@
 
     <svg id="preview" viewBox="0 0 420 420">
 
-      <!-- Contorno negro exterior -->
-      <circle cx="210" cy="210" r="160" fill="none" stroke="#000000" stroke-width="2" />
-
-      <!-- Contorno negro interior -->
-      <circle cx="210" cy="210" r="140" fill="none" stroke="#000000" stroke-width="2" />
-
       <!-- Aro gris grueso -->
       <circle cx="210" cy="210" r="150" fill="none" stroke="#cfcfcf" stroke-width="35" />
+
+      <!-- Bordes negros -->
+      <circle cx="210" cy="210" r="160" fill="none" stroke="#000000" stroke-width="2" />
+      <circle cx="210" cy="210" r="140" fill="none" stroke="#000000" stroke-width="2" />
 
       <!-- Path invisible para texto -->
       <defs>
         <path
           id="textoCircular"
-          d="
-            M 210,210
-            m -150,0
-            a 150,150 0 1,1 300,0
-            a 150,150 0 1,1 -300,0
-          "
+          d="M 210,210 m -140,0 a 140,140 0 1,1 280,0 a 140,140 0 1,1 -280,0"
         />
       </defs>
 
       <!-- Texto circular centrado -->
-      <text font-size="26" fill="#000" dominant-baseline="middle" dy="2" id="textoPreview">
+      <text font-size="32" fill="#000" dominant-baseline="middle" dy="2" id="textoPreview">
         <textPath href="#textoCircular" startOffset="50%" text-anchor="middle">
           TU TEXTO ACÁ
         </textPath>
@@ -53,7 +46,7 @@
       <button id="invertirBtn">Invertir</button>
 
       <label>Tamaño de letra</label>
-      <input type="number" id="tamanoInput" value="26" min="10" max="60" />
+      <input type="number" id="tamanoInput" value="32" min="10" max="60" />
 
       <label>Tipo de fuente</label>
       <select id="fuenteSelect">
@@ -72,6 +65,7 @@
     const invertirBtn = document.getElementById('invertirBtn');
     const tamanoInput = document.getElementById('tamanoInput');
     const fuenteSelect = document.getElementById('fuenteSelect');
+    const path = document.getElementById('textoCircular');
 
     let invertido = false;
 
@@ -80,10 +74,9 @@
       textoPreview.textContent = textoInput.value || 'TU TEXTO ACÁ';
     });
 
-    // Botón para invertir dirección
+    // Botón para invertir dirección del texto
     invertirBtn.addEventListener('click', () => {
       invertido = !invertido;
-      const path = document.getElementById('textoCircular');
       path.setAttribute('transform', invertido ? 'scale(-1,1) translate(-420,0)' : '');
     });
 
@@ -100,4 +93,3 @@
 
 </body>
 </html>
-
