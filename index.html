@@ -3,7 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <title>Factory Laser – Personalizador de Virola</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .contenedor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    svg {
+      width: 300px;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+
+    .controles {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,56 +60,25 @@
     <svg id="preview" viewBox="0 0 420 420">
 
       <!-- Contorno exterior negro fino -->
-      <circle
-        cx="210"
-        cy="210"
-        r="160"
-        fill="none"
-        stroke="#000000"
-        stroke-width="2"
-      />
+      <circle cx="210" cy="210" r="160" fill="none" stroke="#000000" stroke-width="2" />
 
       <!-- Contorno interior negro fino -->
-      <circle
-        cx="210"
-        cy="210"
-        r="140"
-        fill="none"
-        stroke="#000000"
-        stroke-width="2"
-      />
+      <circle cx="210" cy="210" r="140" fill="none" stroke="#000000" stroke-width="2" />
 
       <!-- Aro gris principal -->
-      <circle
-        cx="210"
-        cy="210"
-        r="150"
-        fill="none"
-        stroke="#cfcfcf"
-        stroke-width="35"
-      />
+      <circle cx="210" cy="210" r="150" fill="none" stroke="#cfcfcf" stroke-width="35" />
 
       <!-- Path invisible para texto -->
       <defs>
         <path
           id="textoCircular"
-          d="
-            M 210,210
-            m -150,0
-            a 150,150 0 1,1 300,0
-            a 150,150 0 1,1 -300,0
-          "
+          d="M 210,210 m -150,0 a 150,150 0 1,1 300,0 a 150,150 0 1,1 -300,0"
         />
       </defs>
 
       <!-- Texto circular centrado -->
-      <text font-size="26" fill="#000" dominant-baseline="middle" dy="2">
-        <textPath
-          id="textoPreview"
-          href="#textoCircular"
-          startOffset="50%"
-          text-anchor="middle"
-        >
+      <text font-size="26" fill="#000" dominant-baseline="middle" dy="0">
+        <textPath id="textoPreview" href="#textoCircular" startOffset="50%" text-anchor="middle">
           TU TEXTO ACÁ
         </textPath>
       </text>
@@ -73,16 +87,20 @@
 
     <div class="controles">
       <label>Texto a grabar</label>
-      <input
-        type="text"
-        id="textoInput"
-        placeholder="Escribí tu texto"
-        maxlength="60"
-      />
+      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
     </div>
 
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const textoInput = document.getElementById('textoInput');
+    const textoPreview = document.getElementById('textoPreview');
+
+    // Actualiza el texto en tiempo real
+    textoInput.addEventListener('input', () => {
+      textoPreview.innerHTML = textoInput.value || 'TU TEXTO ACÁ';
+    });
+  </script>
+
 </body>
 </html>
