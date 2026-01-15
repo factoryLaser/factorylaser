@@ -15,25 +15,56 @@
     <svg id="preview" viewBox="0 0 420 420">
 
       <!-- Contorno exterior negro fino -->
-      <circle cx="210" cy="210" r="170" fill="none" stroke="#000000" stroke-width="2" />
+      <circle
+        cx="210"
+        cy="210"
+        r="160"
+        fill="none"
+        stroke="#000000"
+        stroke-width="2"
+      />
 
       <!-- Contorno interior negro fino -->
-      <circle cx="210" cy="210" r="130" fill="none" stroke="#000000" stroke-width="2" />
+      <circle
+        cx="210"
+        cy="210"
+        r="140"
+        fill="none"
+        stroke="#000000"
+        stroke-width="2"
+      />
 
-      <!-- Aro gris principal con fondo gris -->
-      <circle cx="210" cy="210" r="150" fill="#e0e0e0" stroke="#cfcfcf" stroke-width="35" />
+      <!-- Aro gris principal -->
+      <circle
+        cx="210"
+        cy="210"
+        r="150"
+        fill="none"
+        stroke="#cfcfcf"
+        stroke-width="35"
+      />
 
       <!-- Path invisible para texto -->
       <defs>
         <path
           id="textoCircular"
-          d="M 210,210 m -150,0 a 150,150 0 1,1 300,0 a 150,150 0 1,1 -300,0"
+          d="
+            M 210,210
+            m -150,0
+            a 150,150 0 1,1 300,0
+            a 150,150 0 1,1 -300,0
+          "
         />
       </defs>
 
       <!-- Texto circular centrado -->
-      <text font-size="32" fill="#000" dominant-baseline="middle" dy="0" id="textoPreview">
-        <textPath href="#textoCircular" startOffset="50%" text-anchor="middle">
+      <text font-size="26" fill="#000" dominant-baseline="middle" dy="2">
+        <textPath
+          id="textoPreview"
+          href="#textoCircular"
+          startOffset="50%"
+          text-anchor="middle"
+        >
           TU TEXTO ACÁ
         </textPath>
       </text>
@@ -42,56 +73,16 @@
 
     <div class="controles">
       <label>Texto a grabar</label>
-      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
-
-      <label>Tamaño de letra</label>
-      <input type="number" id="tamanoInput" value="32" min="10" max="60" />
-
-      <label>Tipo de fuente</label>
-      <select id="fuenteSelect">
-        <option value="Arial" selected>Arial</option>
-        <option value="Verdana">Verdana</option>
-        <option value="Times New Roman">Times New Roman</option>
-        <option value="Courier New">Courier New</option>
-      </select>
-
-      <label>Dirección del texto</label>
-      <button id="invertirBtn">Invertir</button>
+      <input
+        type="text"
+        id="textoInput"
+        placeholder="Escribí tu texto"
+        maxlength="60"
+      />
     </div>
 
   </div>
 
-  <script>
-    const textoInput = document.getElementById('textoInput');
-    const textoPreview = document.getElementById('textoPreview');
-    const tamanoInput = document.getElementById('tamanoInput');
-    const fuenteSelect = document.getElementById('fuenteSelect');
-    const invertirBtn = document.getElementById('invertirBtn');
-    const path = document.getElementById('textoCircular');
-
-    let invertido = false;
-
-    // Actualiza el texto en tiempo real
-    textoInput.addEventListener('input', () => {
-      textoPreview.innerHTML = textoInput.value || 'TU TEXTO ACÁ';
-    });
-
-    // Cambiar tamaño de letra
-    tamanoInput.addEventListener('input', () => {
-      textoPreview.setAttribute('font-size', tamanoInput.value);
-    });
-
-    // Cambiar tipo de fuente
-    fuenteSelect.addEventListener('change', () => {
-      textoPreview.setAttribute('font-family', fuenteSelect.value);
-    });
-
-    // Invertir dirección del texto
-    invertirBtn.addEventListener('click', () => {
-      invertido = !invertido;
-      path.setAttribute('transform', invertido ? 'scale(-1,1) translate(-420,0)' : '');
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
