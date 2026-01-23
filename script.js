@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!arrastrando) return;
 
     const delta = e.clientX - inicioX;
-    rotacion += delta * 0.4; // sensibilidad
+    rotacion += delta * 0.4;
 
     aplicarTransformaciones();
     inicioX = e.clientX;
@@ -61,14 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO (180° REAL, CORRECTO) =====
+  // ===== INVERTIR TEXTO (180° REAL, INSTANTÁNEO) =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
 
-    // Calcula la rotación final
+    // ROTACIÓN REAL SOBRE EL CENTRO DEL CÍRCULO
     const rotacionFinal = invertido ? rotacion + 180 : rotacion;
-
-    // Aplica rotación real sobre el mismo centro (210,210)
     textoCircularEl.setAttribute('transform', `rotate(${rotacionFinal} 210 210)`);
   });
 
