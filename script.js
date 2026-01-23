@@ -57,31 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO REAL =====
+  // ===== INVERTIR TEXTO REAL ESTABLE =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
 
-    if (invertido) {
-      // Centrado y de cabeza
-      textoPreview.setAttribute('startOffset', '50%');
-      textoPreview.setAttribute('text-anchor', 'middle');
-      textoCircularEl.setAttribute('transform', `rotate(${rotacion + 180} 210 210) scale(-1,1)`);
-    } else {
-      // Normal
-      textoPreview.setAttribute('startOffset', '50%');
-      textoPreview.setAttribute('text-anchor', 'middle');
-      textoCircularEl.setAttribute('transform', `rotate(${rotacion} 210 210) scale(1,1)`);
-    }
-  });
-
-  // ===== APLICAR TRANSFORMACIONES =====
-  function aplicarTransformaciones() {
-    // Solo se aplica rotación por drag, invertido se maneja en el click
-    if (!invertido) {
-      textoCircularEl.setAttribute('transform', `rotate(${rotacion} 210 210) scale(1,1)`);
-    } else {
-      textoCircularEl.setAttribute('transform', `rotate(${rotacion + 180} 210 210) scale(-1,1)`);
-    }
-  }
-});
-
+    // Al
