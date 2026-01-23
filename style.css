@@ -22,9 +22,10 @@ body {
   flex-direction: column;
   width: 300px;
   gap: 10px;
+  margin-top: 10px;
 }
 
-input {
+input[type="text"] {
   padding: 10px;
   font-size: 16px;
 }
@@ -32,5 +33,13 @@ input {
 button {
   padding: 10px;
   font-size: 16px;
+  cursor: pointer;
+}
+
+label {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
 }
