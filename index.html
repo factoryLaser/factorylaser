@@ -2,63 +2,58 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Factory Laser – Virola</title>
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    svg {
-      background: #f5f5f5;
-      border-radius: 12px;
-    }
-  </style>
+  <title>Factory Laser – Personalizador de Virola</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<svg width="400" height="400" viewBox="0 0 400 400">
+  <h1>Factory Laser</h1>
+  <p>Previsualizá tu grabado en la virola</p>
 
-  <!-- VIROLA (CÍRCULO VISIBLE) -->
-  <circle
-    cx="200"
-    cy="200"
-    r="140"
-    fill="#d9d9d9"
-    stroke="#000"
-    stroke-width="4"
-  />
+  <div class="contenedor">
 
-  <!-- PATH INVISIBLE PARA EL TEXTO -->
-  <defs>
-    <path
-      id="textPath"
-      d="M 60 200 A 140 140 0 1 1 340 200"
-    />
-  </defs>
+    <svg id="preview" viewBox="0 0 420 420">
 
-  <!-- TEXTO CURVO -->
-  <text
-    font-size="22"
-    fill="#000"
-    font-weight="bold"
-  >
-    <textPath
-      id="textOnPath"
-      href="#textPath"
-      startOffset="50%"
-      text-anchor="middle"
-    >
-      FACTORY LASER
-    </textPath>
-  </text>
+      <!-- Borde negro debajo -->
+      <circle cx="210" cy="210" r="150" fill="none" stroke="#000" stroke-width="5" />
 
-</svg>
+      <!-- Aro gris -->
+      <circle cx="210" cy="210" r="150" fill="none" stroke="#cfcfcf" stroke-width="35" />
 
+      <!-- Path circular -->
+      <defs>
+        <path
+          id="textoCircular"
+          d="M 210,210
+             m -150,0
+             a 150,150 0 1,1 300,0
+             a 150,150 0 1,1 -300,0" />
+      </defs>
+
+      <!-- Texto -->
+      <text id="textoCircularEl"
+            font-size="26"
+            fill="#000"
+            dominant-baseline="middle">
+        <textPath
+          id="textoPreview"
+          href="#textoCircular"
+          startOffset="50%"
+          text-anchor="middle">
+          TU TEXTO ACÁ
+        </textPath>
+      </text>
+
+    </svg>
+
+    <div class="controles">
+      <label>Texto a grabar</label>
+      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
+      <button id="invertirBtn">Invertir texto</button>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
