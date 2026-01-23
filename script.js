@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!arrastrando) return;
     const delta = e.clientX - inicioX;
     rotacion += delta * 0.4;
-    aplicarTransformaciones();
+    actualizarTransform();
     inicioX = e.clientX;
   });
 
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!arrastrando) return;
     const delta = e.touches[0].clientX - inicioX;
     rotacion += delta * 0.4;
-    aplicarTransformaciones();
+    actualizarTransform();
     inicioX = e.touches[0].clientX;
   });
 
@@ -57,8 +57,23 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO REAL ESTABLE =====
+  // ===== INVERTIR TEXTO =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
+    actualizarTransform();
+  });
 
-    // Al
+  // ===== FUNCION CENTRAL DE TRANSFORM =====
+  function actualizarTransform() {
+    // Calculamos la rotación final
+    const rotFinal = rotacion + (invertido ? 180 : 0);
+
+    // Siempre forzamos que el textoPath se re-renderice
+    // Esto evita que desaparezca en algunos navegadores
+    textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+
+    // Aseguramos que el textoPath siga centrado
+    textoPreview.setAttribute('startOffset', '50%');
+    textoPreview.setAttribute('text-anchor', 'middle');
+  }
+});
