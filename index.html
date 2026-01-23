@@ -20,25 +20,15 @@
       <!-- Aro gris -->
       <circle cx="210" cy="210" r="150" fill="none" stroke="#cfcfcf" stroke-width="35" />
 
-      <!-- Path circular -->
+      <!-- Path circular normal -->
       <defs>
-        <path
-          id="textoCircular"
-          d="M 210,210
-             m -150,0
-             a 150,150 0 1,1 300,0
-             a 150,150 0 1,1 -300,0" />
+        <path id="textoCircularExterior" d="M210,210 m-150,0 a150,150 0 1,1 300,0 a150,150 0 1,1 -300,0" />
+        <path id="textoCircularInterior" d="M210,210 m150,0 a150,150 0 1,0 -300,0 a150,150 0 1,0 300,0" />
       </defs>
 
       <!-- Texto que sigue el path -->
-      <text id="textoCircularEl"
-            font-size="26"
-            fill="#000"
-            dominant-baseline="middle">
-        <textPath id="textoPreview"
-                  href="#textoCircular"
-                  startOffset="50%"
-                  text-anchor="middle">
+      <text id="textoCircularEl" font-size="26" fill="#000" dominant-baseline="middle">
+        <textPath id="textoPreview" href="#textoCircularExterior" startOffset="50%" text-anchor="middle">
           TU TEXTO ACÁ
         </textPath>
       </text>
