@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const papeleraBtn = document.getElementById('papeleraBtn');
 
   let capaID = 0;
-  let capasAgregadas = []; // Aquí guardamos solo las capas que se pueden eliminar
+  let capasAgregadas = [];
 
   // ===== Crear palabra inicial visible =====
   crearCapa("TU TEXTO ACÁ", false);
@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     crearCapa(`Palabra ${capaID + 1}`, true);
   });
 
-  // ===== Botón papelera (quita la última palabra agregada) =====
+  // ===== Botón papelera =====
   papeleraBtn.addEventListener('click', () => {
-    if (capasAgregadas.length === 0) return; // nada que borrar
-    const ultimaCapa = capasAgregadas.pop(); // sacamos la última agregada
-    ultimaCapa.grupo.remove();               // eliminamos del SVG
-    ultimaCapa.controlesDiv.remove();        // eliminamos los controles de texto
+    if (capasAgregadas.length === 0) return;
+    const ultimaCapa = capasAgregadas.pop();
+    ultimaCapa.grupo.remove();
+    ultimaCapa.controlesDiv.remove();
   });
 
   // ===== Función para crear capa =====
@@ -107,7 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
       arrastrando = false;
     });
 
-    // ===== Doble click invertir =====
+    // ===== Botón invertir =====
+    agregarCapaBtn.addEventListener('click', () => {
+      // nada aquí, ya se usa solo el drag e input
+    });
+
     textEl.addEventListener('dblclick', () => {
       invertido = !invertido;
       actualizarTransform();
@@ -123,9 +127,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     actualizarTransform(); // inicializar
 
-    // Guardamos la capa solo si es removable
     if (removable) {
       capasAgregadas.push({grupo, controlesDiv});
     }
   }
 });
+
