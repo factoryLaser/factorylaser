@@ -12,10 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== ESTADO =====
   let arrastrando = false;
   let inicioX = 0;
-  let rotacionDrag = 0;     // rotación por drag
-  let invertido = false;    // estado de invertir
+  let rotacionDrag = 0;      // rotación por drag
+  let invertido = false;     // estado invertir
 
-  // cursor
   textoCircularEl.style.cursor = 'grab';
 
   // ===== DRAG DESKTOP =====
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO 180° =====
+  // ===== BOTON INVERTIR =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
     actualizarTransform();
@@ -68,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Rotación final = drag + 180° si invertido
     const rotFinal = rotacionDrag + (invertido ? 180 : 0);
 
-    // Aplicamos al <text> para que gire sobre sí mismo
+    // Aplicamos rotación sobre el centro de la virola
     textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
 
     // Aseguramos que el textoPath siga centrado
