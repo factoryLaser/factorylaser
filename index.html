@@ -1,1 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Factory Laser | Virola</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<div class="app">
+  <aside class="panel">
+    <h2>Herramientas</h2>
+
+    <input id="textInput" placeholder="Texto a grabar" />
+
+    <button onclick="rotateLeft()">Rotar -</button>
+    <button onclick="rotateRight()">Rotar +</button>
+    <button onclick="moveUp()">Subir</button>
+    <button onclick="moveDown()">Bajar</button>
+    <button onclick="invertText()">Invertir</button>
+    <button onclick="exportSVG()">Exportar SVG</button>
+  </aside>
+
+  <main class="workspace">
+    <svg id="canvas" viewBox="0 0 600 200">
+
+      <defs>
+        <linearGradient id="steel" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#bfc1c3"/>
+          <stop offset="50%" stop-color="#f2f2f2"/>
+          <stop offset="100%" stop-color="#bfc1c3"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Virola -->
+      <rect x="10" y="40" width="580" height="120" rx="60" fill="url(#steel)" />
+
+      <!-- Texto -->
+      <text id="grabado"
+            x="300"
+            y="110"
+            text-anchor="middle"
+            dominant-baseline="middle"
+            font-size="36"
+            fill="#222"
+            font-family="Arial">
+        FACTORY LASER
+      </text>
+
+    </svg>
+  </main>
+</div>
+
+<script src="virola.js"></script>
+</body>
+</html>
