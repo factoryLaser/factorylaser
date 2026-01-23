@@ -1,19 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
   const capasContenedor = document.getElementById('capasTexto');
   const agregarCapaBtn = document.getElementById('agregarCapaBtn');
+  const papeleraBtn = document.getElementById('papeleraBtn');
 
   let capaID = 0;
+  let capasAgregadas = []; // Aquí guardamos solo las capas que se pueden eliminar
 
   // ===== Crear palabra inicial visible =====
-  agregarCapa("TU TEXTO ACÁ");
+  crearCapa("TU TEXTO ACÁ", false);
 
   // ===== Botón agregar nueva palabra =====
   agregarCapaBtn.addEventListener('click', () => {
-    agregarCapa(`Palabra ${capaID + 1}`);
+    crearCapa(`Palabra ${capaID + 1}`, true);
   });
 
-  // ===== Función para agregar capa de texto =====
-  function agregarCapa(textoInicial) {
+  // ===== Botón papelera (quita la última palabra agregada) =====
+  papeleraBtn.addEventListener('click', () => {
+    if (capasAgregadas.length === 0) return; // nada que borrar
+    const ultimaCapa = capasAgregadas.pop(); // sacamos la última agregada
+    ultimaCapa.grupo.remove();               // eliminamos del SVG
+    ultimaCapa.controlesDiv.remove();        // eliminamos los controles de texto
+  });
+
+  // ===== Función para crear capa =====
+  function crearCapa(textoInicial, removable) {
     capaID++;
 
     // Crear grupo <g> para la capa
@@ -39,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===== Controles de capa =====
     const controlesDiv = document.createElement("div");
-    controlesDiv.classList.add("controles");
+    controlesDiv.classList.add("capa-controles");
 
     const input = document.createElement("input");
     input.type = "text";
@@ -49,21 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
       textPath.textContent = input.value;
     });
 
-    const invertirBtn = document.createElement("button");
-    invertirBtn.textContent = "Invertir texto";
-
-    const toggleBorde = document.createElement("input");
-    toggleBorde.type = "checkbox";
-    toggleBorde.checked = true;
-
-    const toggleLabel = document.createElement("label");
-    toggleLabel.textContent = "Borde exterior";
-    toggleLabel.prepend(toggleBorde);
-
     controlesDiv.appendChild(input);
-    controlesDiv.appendChild(invertirBtn);
-    controlesDiv.appendChild(toggleLabel);
-
     document.querySelector(".contenedor").appendChild(controlesDiv);
 
     // ===== Estado por capa =====
@@ -71,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let inicioX = 0;
     let rotacion = 0;
     let invertido = false;
-    let bordeExterior = toggleBorde.checked;
 
     // ===== Drag Desktop =====
     textEl.addEventListener('mousedown', e => {
@@ -112,30 +107,25 @@ document.addEventListener('DOMContentLoaded', () => {
       arrastrando = false;
     });
 
-    // ===== Botón invertir =====
-    invertirBtn.addEventListener('click', () => {
+    // ===== Doble click invertir =====
+    textEl.addEventListener('dblclick', () => {
       invertido = !invertido;
-      actualizarTransform();
-    });
-
-    // ===== Checkbox borde =====
-    toggleBorde.addEventListener('change', () => {
-      bordeExterior = toggleBorde.checked;
       actualizarTransform();
     });
 
     // ===== Función actualizar transformaciones =====
     function actualizarTransform() {
-      textEl.setAttribute('transform', `rotate(${rotacion} 210 210)`);
-      if (bordeExterior) {
-        textPath.setAttribute('href', invertido ? '#textoCircularInterior' : '#textoCircularExterior');
-      } else {
-        textPath.setAttribute('href', invertido ? '#textoCircularExterior' : '#textoCircularInterior');
-      }
+      const rotFinal = invertido ? rotacion + 180 : rotacion;
+      textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
       textPath.setAttribute('startOffset', '50%');
       textPath.setAttribute('text-anchor', 'middle');
     }
 
     actualizarTransform(); // inicializar
+
+    // Guardamos la capa solo si es removable
+    if (removable) {
+      capasAgregadas.push({grupo, controlesDiv});
+    }
   }
 });
