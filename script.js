@@ -8,26 +8,30 @@ textoInput.addEventListener('input', () => {
   textoPreview.textContent = textoInput.value || 'TU TEXTO ACÁ';
 });
 
-// ===== ROTACIÓN POR ARRASTRE (DESKTOP + MOBILE) =====
+// ===== ESTADO =====
 let arrastrando = false;
 let inicioX = 0;
 let rotacion = 0;
 let invertido = false;
 
+// cursor
 textoCircularEl.style.cursor = 'grab';
 
-// Desktop
-textoCircularEl.addEventListener('mousedown', e => {
+// ===== DESKTOP DRAG =====
+textoCircularEl.addEventListener('mousedown', (e) => {
   arrastrando = true;
   inicioX = e.clientX;
   textoCircularEl.style.cursor = 'grabbing';
   e.preventDefault();
 });
 
-document.addEventListener('mousemove', e => {
+document.addEventListener('mousemove', (e) => {
   if (!arrastrando) return;
-  rotacion += (e.clientX - inicioX) * 0.4;
-  aplicarTransformacion();
+
+  const delta = e.clientX - inicioX;
+  rotacion += delta * 0.4; // sensibilidad
+
+  aplicarTransformaciones();
   inicioX = e.clientX;
 });
 
@@ -36,17 +40,19 @@ document.addEventListener('mouseup', () => {
   textoCircularEl.style.cursor = 'grab';
 });
 
-// Mobile
-textoCircularEl.addEventListener('touchstart', e => {
+// ===== MOBILE DRAG =====
+textoCircularEl.addEventListener('touchstart', (e) => {
   arrastrando = true;
   inicioX = e.touches[0].clientX;
-  e.preventDefault();
 });
 
-document.addEventListener('touchmove', e => {
+document.addEventListener('touchmove', (e) => {
   if (!arrastrando) return;
-  rotacion += (e.touches[0].clientX - inicioX) * 0.4;
-  aplicarTransformacion();
+
+  const delta = e.touches[0].clientX - inicioX;
+  rotacion += delta * 0.4;
+
+  aplicarTransformaciones();
   inicioX = e.touches[0].clientX;
 });
 
@@ -54,17 +60,15 @@ document.addEventListener('touchend', () => {
   arrastrando = false;
 });
 
-// ===== INVERTIR 180° =====
+// ===== INVERTIR TEXTO (180° REAL) =====
 invertirBtn.addEventListener('click', () => {
   invertido = !invertido;
-  aplicarTransformacion();
+  aplicarTransformaciones();
 });
 
-// ===== APLICAR TRANSFORMACIÓN =====
-function aplicarTransformacion() {
-  const rotFinal = invertido ? rotacion + 180 : rotacion;
+// ===== APLICAR TRANSFORMACIONES =====
+function aplicarTransformaciones() {
+  const rotacionFinal = invertido ? rotacion + 180 : rotacion;
+
   textoCircularEl.setAttribute(
-    'transform',
-    `rotate(${rotFinal} 210 210)`
-  );
-}
+    'tr
