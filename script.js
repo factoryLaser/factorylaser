@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let capasAgregadas = [];
   let invertido = false;
 
-  // ===== Crear palabra inicial visible =====
-  crearCapa("TU TEXTO ACÁ", false);
+  // ===== Palabra inicial =====
+  let capaInicial = crearCapa("TU TEXTO ACÁ", false);
 
   // ===== Botón agregar nueva palabra =====
   agregarCapaBtn.addEventListener('click', () => {
@@ -27,13 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Botón Invertir =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
-    capasAgregadas.forEach(c => actualizarTransform(c.textEl, c.rotacion));
-    // También invertimos la palabra inicial
-    if (capasInicial) actualizarTransform(capasInicial.textEl, capasInicial.rotacion);
+    // Actualiza todas las capas: inicial + agregadas
+    actualizarTransform(capaInicial);
+    capasAgregadas.forEach(c => actualizarTransform(c));
   });
-
-  // ===== Palabra inicial =====
-  let capasInicial = null;
 
   // ===== Función para crear capa =====
   function crearCapa(textoInicial, removable) {
@@ -89,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!arrastrando) return;
       const delta = e.clientX - inicioX;
       rotacion += delta * 0.4;
-      actualizarTransform(textEl, rotacion);
+      actualizarTransform({textEl, rotacion});
       inicioX = e.clientX;
     });
 
@@ -108,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!arrastrando) return;
       const delta = e.touches[0].clientX - inicioX;
       rotacion += delta * 0.4;
-      actualizarTransform(textEl, rotacion);
+      actualizarTransform({textEl, rotacion});
       inicioX = e.touches[0].clientX;
     });
 
@@ -116,17 +113,23 @@ document.addEventListener('DOMContentLoaded', () => {
       arrastrando = false;
     });
 
-    actualizarTransform(textEl, rotacion);
+    actualizarTransform({textEl, rotacion});
+
+    const capaObj = {grupo, controlesDiv, textEl, rotacion};
 
     if (removable) {
-      capasAgregadas.push({grupo, controlesDiv, textEl, rotacion});
+      capasAgregadas.push(capaObj);
     } else {
-      capasInicial = {grupo, controlesDiv, textEl, rotacion};
+      capaInicial = capaObj;
     }
+
+    return capaObj;
   }
 
-  function actualizarTransform(textEl, rot) {
-    const rotFinal = invertido ? rot + 180 : rot;
-    textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+  // ===== Función que aplica rotación + invertido =====
+  function actualizarTransform(capa) {
+    const rotFinal = invertido ? capa.rotacion + 180 : capa.rotacion;
+    capa.textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
   }
+
 });
