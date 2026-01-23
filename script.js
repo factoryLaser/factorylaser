@@ -2,9 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const capasContenedor = document.getElementById('capasTexto');
   const agregarCapaBtn = document.getElementById('agregarCapaBtn');
   const papeleraBtn = document.getElementById('papeleraBtn');
+  const invertirBtn = document.getElementById('invertirBtn');
 
   let capaID = 0;
   let capasAgregadas = [];
+  let invertido = false;
 
   // ===== Crear palabra inicial visible =====
   crearCapa("TU TEXTO ACÁ", false);
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     crearCapa(`Palabra ${capaID + 1}`, true);
   });
 
-  // ===== Botón papelera =====
+  // ===== Botón papelera (quita la última palabra agregada) =====
   papeleraBtn.addEventListener('click', () => {
     if (capasAgregadas.length === 0) return;
     const ultimaCapa = capasAgregadas.pop();
@@ -22,15 +24,24 @@ document.addEventListener('DOMContentLoaded', () => {
     ultimaCapa.controlesDiv.remove();
   });
 
+  // ===== Botón Invertir =====
+  invertirBtn.addEventListener('click', () => {
+    invertido = !invertido;
+    capasAgregadas.forEach(c => actualizarTransform(c.textEl, c.rotacion));
+    // También invertimos la palabra inicial
+    if (capasInicial) actualizarTransform(capasInicial.textEl, capasInicial.rotacion);
+  });
+
+  // ===== Palabra inicial =====
+  let capasInicial = null;
+
   // ===== Función para crear capa =====
   function crearCapa(textoInicial, removable) {
     capaID++;
 
-    // Crear grupo <g> para la capa
     const grupo = document.createElementNS("http://www.w3.org/2000/svg", "g");
     grupo.setAttribute("id", `capa-${capaID}`);
 
-    // Crear <text> y <textPath>
     const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
     textEl.setAttribute("font-size", "26");
     textEl.setAttribute("fill", "#000");
@@ -47,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
     grupo.appendChild(textEl);
     capasContenedor.appendChild(grupo);
 
-    // ===== Controles de capa =====
     const controlesDiv = document.createElement("div");
     controlesDiv.classList.add("capa-controles");
 
@@ -66,9 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let arrastrando = false;
     let inicioX = 0;
     let rotacion = 0;
-    let invertido = false;
 
-    // ===== Drag Desktop =====
+    // Drag Desktop
     textEl.addEventListener('mousedown', e => {
       arrastrando = true;
       inicioX = e.clientX;
@@ -80,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!arrastrando) return;
       const delta = e.clientX - inicioX;
       rotacion += delta * 0.4;
-      actualizarTransform();
+      actualizarTransform(textEl, rotacion);
       inicioX = e.clientX;
     });
 
@@ -89,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       textEl.style.cursor = 'grab';
     });
 
-    // ===== Drag Mobile =====
+    // Drag Mobile
     textEl.addEventListener('touchstart', e => {
       arrastrando = true;
       inicioX = e.touches[0].clientX;
@@ -99,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!arrastrando) return;
       const delta = e.touches[0].clientX - inicioX;
       rotacion += delta * 0.4;
-      actualizarTransform();
+      actualizarTransform(textEl, rotacion);
       inicioX = e.touches[0].clientX;
     });
 
@@ -107,29 +116,17 @@ document.addEventListener('DOMContentLoaded', () => {
       arrastrando = false;
     });
 
-    // ===== Botón invertir =====
-    agregarCapaBtn.addEventListener('click', () => {
-      // nada aquí, ya se usa solo el drag e input
-    });
-
-    textEl.addEventListener('dblclick', () => {
-      invertido = !invertido;
-      actualizarTransform();
-    });
-
-    // ===== Función actualizar transformaciones =====
-    function actualizarTransform() {
-      const rotFinal = invertido ? rotacion + 180 : rotacion;
-      textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-      textPath.setAttribute('startOffset', '50%');
-      textPath.setAttribute('text-anchor', 'middle');
-    }
-
-    actualizarTransform(); // inicializar
+    actualizarTransform(textEl, rotacion);
 
     if (removable) {
-      capasAgregadas.push({grupo, controlesDiv});
+      capasAgregadas.push({grupo, controlesDiv, textEl, rotacion});
+    } else {
+      capasInicial = {grupo, controlesDiv, textEl, rotacion};
     }
   }
-});
 
+  function actualizarTransform(textEl, rot) {
+    const rotFinal = invertido ? rot + 180 : rot;
+    textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+  }
+});
