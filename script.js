@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let inicioX = 0;
   let rotacionDrag = 0;
   let invertido = false;
-  let bordeExterior = false;
+  let bordeExterior = true; // por defecto exterior
 
   textoCircularEl.style.cursor = 'grab';
 
@@ -72,14 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== FUNCION CENTRAL DE TRANSFORM =====
   function actualizarTransform() {
-    // Rotación final = drag + 180° si invertido
-    const rotFinal = rotacionDrag + (invertido ? 180 : 0);
+    // Drag se aplica como rotate normal
+    const rotFinal = rotacionDrag;
 
-    // Aplicamos rotación sobre el centro de la virola
     textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
 
-    // Ajustamos startOffset para borde exterior/interior
-    textoPreview.setAttribute('startOffset', bordeExterior ? '70%' : '50%');
+    // Cambiamos el path según invertido y borde
+    if (bordeExterior) {
+      textoPreview.setAttribute('href', invertido ? '#textoCircularInterior' : '#textoCircularExterior');
+    } else {
+      textoPreview.setAttribute('href', invertido ? '#textoCircularExterior' : '#textoCircularInterior');
+    }
+
+    // Siempre centrado
+    textoPreview.setAttribute('startOffset', '50%');
     textoPreview.setAttribute('text-anchor', 'middle');
   }
 });
