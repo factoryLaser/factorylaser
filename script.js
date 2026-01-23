@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const textoInput = document.getElementById('textoInput');
   const textoPreview = document.getElementById('textoPreview');
-  const textoCircularGroup = document.getElementById('textoCircularGroup');
+  const textoCircularEl = document.getElementById('textoCircularEl');
   const invertirBtn = document.getElementById('invertirBtn');
 
   // ===== TEXTO EN TIEMPO REAL =====
@@ -12,35 +12,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== ESTADO =====
   let arrastrando = false;
   let inicioX = 0;
-  let rotacion = 0;
-  let invertido = false;
+  let rotacionDrag = 0;     // rotación por drag
+  let invertido = false;    // estado de invertir
 
   // cursor
-  textoCircularGroup.style.cursor = 'grab';
+  textoCircularEl.style.cursor = 'grab';
 
   // ===== DRAG DESKTOP =====
-  textoCircularGroup.addEventListener('mousedown', e => {
+  textoCircularEl.addEventListener('mousedown', e => {
     arrastrando = true;
     inicioX = e.clientX;
-    textoCircularGroup.style.cursor = 'grabbing';
+    textoCircularEl.style.cursor = 'grabbing';
     e.preventDefault();
   });
 
   document.addEventListener('mousemove', e => {
     if (!arrastrando) return;
     const delta = e.clientX - inicioX;
-    rotacion += delta * 0.4;
+    rotacionDrag += delta * 0.4;
     actualizarTransform();
     inicioX = e.clientX;
   });
 
   document.addEventListener('mouseup', () => {
     arrastrando = false;
-    textoCircularGroup.style.cursor = 'grab';
+    textoCircularEl.style.cursor = 'grab';
   });
 
   // ===== DRAG MOBILE =====
-  textoCircularGroup.addEventListener('touchstart', e => {
+  textoCircularEl.addEventListener('touchstart', e => {
     arrastrando = true;
     inicioX = e.touches[0].clientX;
   });
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('touchmove', e => {
     if (!arrastrando) return;
     const delta = e.touches[0].clientX - inicioX;
-    rotacion += delta * 0.4;
+    rotacionDrag += delta * 0.4;
     actualizarTransform();
     inicioX = e.touches[0].clientX;
   });
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO =====
+  // ===== INVERTIR TEXTO 180° =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
     actualizarTransform();
@@ -65,9 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== FUNCION CENTRAL DE TRANSFORM =====
   function actualizarTransform() {
-    const rotFinal = rotacion + (invertido ? 180 : 0);
-    textoCircularGroup.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-    // asegura que el textoPath siempre esté centrado
+    // Rotación final = drag + 180° si invertido
+    const rotFinal = rotacionDrag + (invertido ? 180 : 0);
+
+    // Aplicamos al <text> para que gire sobre sí mismo
+    textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+
+    // Aseguramos que el textoPath siga centrado
     textoPreview.setAttribute('startOffset', '50%');
     textoPreview.setAttribute('text-anchor', 'middle');
   }
