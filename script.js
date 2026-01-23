@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const textoPreview = document.getElementById('textoPreview');
   const textoCircularEl = document.getElementById('textoCircularEl');
   const invertirBtn = document.getElementById('invertirBtn');
+  const toggleBorde = document.getElementById('toggleBorde');
 
   // ===== TEXTO EN TIEMPO REAL =====
   textoInput.addEventListener('input', () => {
@@ -12,8 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== ESTADO =====
   let arrastrando = false;
   let inicioX = 0;
-  let rotacionDrag = 0;      // rotación por drag
-  let invertido = false;     // estado invertir
+  let rotacionDrag = 0;
+  let invertido = false;
+  let bordeExterior = false;
 
   textoCircularEl.style.cursor = 'grab';
 
@@ -62,6 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizarTransform();
   });
 
+  // ===== TOGGLE BORDE =====
+  toggleBorde.addEventListener('change', () => {
+    bordeExterior = toggleBorde.checked;
+    actualizarTransform();
+  });
+
   // ===== FUNCION CENTRAL DE TRANSFORM =====
   function actualizarTransform() {
     // Rotación final = drag + 180° si invertido
@@ -70,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Aplicamos rotación sobre el centro de la virola
     textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
 
-    // Aseguramos que el textoPath siga centrado
-    textoPreview.setAttribute('startOffset', '50%');
+    // Ajustamos startOffset para borde exterior/interior
+    textoPreview.setAttribute('startOffset', bordeExterior ? '70%' : '50%');
     textoPreview.setAttribute('text-anchor', 'middle');
   }
 });
