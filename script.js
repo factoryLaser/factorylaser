@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== ESTADO =====
   let arrastrando = false;
   let inicioX = 0;
-  let rotacion = 0;
-  let invertido = false;
+  let rotacion = 0;     // rotación acumulada por drag
+  let invertido = false; // estado del botón invertir
 
   // cursor
   textoCircularEl.style.cursor = 'grab';
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!arrastrando) return;
 
     const delta = e.clientX - inicioX;
-    rotacion += delta * 0.4;
+    rotacion += delta * 0.4; // sensibilidad del drag
 
     aplicarTransformaciones();
     inicioX = e.clientX;
@@ -61,18 +61,16 @@ document.addEventListener('DOMContentLoaded', () => {
     arrastrando = false;
   });
 
-  // ===== INVERTIR TEXTO (180° REAL, INSTANTÁNEO) =====
+  // ===== BOTÓN INVERTIR TEXTO =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
-
-    // ROTACIÓN REAL SOBRE EL CENTRO DEL CÍRCULO
-    const rotacionFinal = invertido ? rotacion + 180 : rotacion;
-    textoCircularEl.setAttribute('transform', `rotate(${rotacionFinal} 210 210)`);
+    aplicarTransformaciones(); // aplicamos 180° sobre la rotación acumulada
   });
 
-  // ===== APLICAR TRANSFORMACIONES =====
+  // ===== FUNCION QUE APLICA ROTACIÓN =====
   function aplicarTransformaciones() {
-    const rotacionFinal = invertido ? rotacion + 180 : rotacion;
-    textoCircularEl.setAttribute('transform', `rotate(${rotacionFinal} 210 210)`);
+    // Solo sumamos 180° si invertido
+    const rotFinal = rotacion + (invertido ? 180 : 0);
+    textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
   }
 });
