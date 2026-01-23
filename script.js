@@ -4,14 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let capaID = 0;
 
+  // ===== Crear palabra inicial visible =====
+  agregarCapa("TU TEXTO ACÁ");
+
+  // ===== Botón agregar nueva palabra =====
   agregarCapaBtn.addEventListener('click', () => {
     agregarCapa(`Palabra ${capaID + 1}`);
   });
 
+  // ===== Función para agregar capa de texto =====
   function agregarCapa(textoInicial) {
     capaID++;
 
-    // Crear grupo <g> para cada capa
+    // Crear grupo <g> para la capa
     const grupo = document.createElementNS("http://www.w3.org/2000/svg", "g");
     grupo.setAttribute("id", `capa-${capaID}`);
 
@@ -32,11 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
     grupo.appendChild(textEl);
     capasContenedor.appendChild(grupo);
 
-    // ===== CONTROLES =====
+    // ===== Controles de capa =====
     const controlesDiv = document.createElement("div");
     controlesDiv.classList.add("controles");
 
-    // Input de texto
     const input = document.createElement("input");
     input.type = "text";
     input.value = textoInicial;
@@ -45,14 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
       textPath.textContent = input.value;
     });
 
-    // Botón invertir
     const invertirBtn = document.createElement("button");
     invertirBtn.textContent = "Invertir texto";
 
-    // Checkbox borde
     const toggleBorde = document.createElement("input");
     toggleBorde.type = "checkbox";
     toggleBorde.checked = true;
+
     const toggleLabel = document.createElement("label");
     toggleLabel.textContent = "Borde exterior";
     toggleLabel.prepend(toggleBorde);
@@ -63,14 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector(".contenedor").appendChild(controlesDiv);
 
-    // ===== ESTADO POR CAPA =====
+    // ===== Estado por capa =====
     let arrastrando = false;
     let inicioX = 0;
     let rotacion = 0;
     let invertido = false;
     let bordeExterior = toggleBorde.checked;
 
-    // Drag desktop
+    // ===== Drag Desktop =====
     textEl.addEventListener('mousedown', e => {
       arrastrando = true;
       inicioX = e.clientX;
@@ -91,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
       textEl.style.cursor = 'grab';
     });
 
-    // Drag mobile
+    // ===== Drag Mobile =====
     textEl.addEventListener('touchstart', e => {
       arrastrando = true;
       inicioX = e.touches[0].clientX;
@@ -109,19 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
       arrastrando = false;
     });
 
-    // Botón invertir
+    // ===== Botón invertir =====
     invertirBtn.addEventListener('click', () => {
       invertido = !invertido;
       actualizarTransform();
     });
 
-    // Checkbox borde
+    // ===== Checkbox borde =====
     toggleBorde.addEventListener('change', () => {
       bordeExterior = toggleBorde.checked;
       actualizarTransform();
     });
 
-    // Función de actualización
+    // ===== Función actualizar transformaciones =====
     function actualizarTransform() {
       textEl.setAttribute('transform', `rotate(${rotacion} 210 210)`);
       if (bordeExterior) {
@@ -136,4 +139,3 @@ document.addEventListener('DOMContentLoaded', () => {
     actualizarTransform(); // inicializar
   }
 });
-
