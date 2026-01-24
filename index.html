@@ -12,30 +12,58 @@
 
   <div class="contenedor">
 
+    <!-- Botones para agregar/quitar palabra -->
+    <div class="botones-superiores">
+      <button id="agregarCapaBtn">+ Agregar palabra</button>
+      <button id="papeleraBtn">🗑 Quitar última</button>
+      <button id="invertirBtn">Invertir texto</button>
+    </div>
+
     <svg id="preview" viewBox="0 0 420 420">
+
       <!-- Borde negro debajo -->
       <circle cx="210" cy="210" r="150" fill="none" stroke="#000" stroke-width="5" />
+
       <!-- Aro gris -->
       <circle cx="210" cy="210" r="150" fill="none" stroke="#cfcfcf" stroke-width="35" />
 
-      <!-- Paths circulares -->
+      <!-- Path circular -->
       <defs>
-        <path id="textoCircularExterior" d="M210,210 m-150,0 a150,150 0 1,1 300,0 a150,150 0 1,1 -300,0" />
+        <path
+          id="textoCircular"
+          d="M 210,210
+             m -150,0
+             a 150,150 0 1,1 300,0
+             a 150,150 0 1,1 -300,0" />
       </defs>
 
-      <!-- Capas de texto -->
-      <g id="capasTexto"></g>
+      <!-- Palabra inicial -->
+      <text id="textoCircularEl"
+            font-size="26"
+            fill="#000"
+            dominant-baseline="middle">
+        <textPath
+          id="textoPreview"
+          href="#textoCircular"
+          startOffset="50%"
+          text-anchor="middle">
+          TU TEXTO ACÁ
+        </textPath>
+      </text>
+
     </svg>
 
-    <!-- Controles globales -->
-    <div class="controles-global">
-      <button id="agregarCapaBtn">➕</button>
-      <button id="papeleraBtn">🗑️</button>
-      <button id="invertirBtn">Invertir</button>
+    <div class="controles">
+      <label>Texto a grabar</label>
+      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
     </div>
+
+    <!-- Contenedor interno para capas agregadas -->
+    <svg id="capasTexto"></svg>
 
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
