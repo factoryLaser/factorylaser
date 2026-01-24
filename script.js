@@ -1,135 +1,145 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const capasContenedor = document.getElementById('capasTexto');
+  const textoInput = document.getElementById('textoInput');
+  const textoPreview = document.getElementById('textoPreview');
+  const textoCircularEl = document.getElementById('textoCircularEl');
+  const invertirBtn = document.getElementById('invertirBtn');
   const agregarCapaBtn = document.getElementById('agregarCapaBtn');
   const papeleraBtn = document.getElementById('papeleraBtn');
-  const invertirBtn = document.getElementById('invertirBtn');
+  const capasSVG = document.getElementById('capasTexto');
 
-  let capaID = 0;
-  let capasAgregadas = [];
+  // ===== ESTADO =====
+  let arrastrando = false;
+  let inicioX = 0;
+  let rotacion = 0;
   let invertido = false;
 
-  // ===== Palabra inicial =====
-  let capaInicial = crearCapa("TU TEXTO ACÁ", false);
+  // Estado capas agregadas
+  let capasAgregadas = [];
 
-  // ===== Botón agregar nueva palabra =====
-  agregarCapaBtn.addEventListener('click', () => {
-    crearCapa(`Palabra ${capaID + 1}`, true);
+  // ===== TEXTO INICIAL EN TIEMPO REAL =====
+  textoInput.addEventListener('input', () => {
+    textoPreview.textContent = textoInput.value || 'TU TEXTO ACÁ';
   });
 
-  // ===== Botón papelera (quita la última palabra agregada) =====
-  papeleraBtn.addEventListener('click', () => {
-    if (capasAgregadas.length === 0) return;
-    const ultimaCapa = capasAgregadas.pop();
-    ultimaCapa.grupo.remove();
-    ultimaCapa.controlesDiv.remove();
+  // ===== DRAG - Desktop =====
+  textoCircularEl.style.cursor = 'grab';
+  textoCircularEl.addEventListener('mousedown', e => {
+    arrastrando = true;
+    inicioX = e.clientX;
+    textoCircularEl.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!arrastrando) return;
+    const delta = e.clientX - inicioX;
+    rotacion += delta * 0.4;
+    aplicarTransformaciones();
+    inicioX = e.clientX;
+  });
+  document.addEventListener('mouseup', () => {
+    arrastrando = false;
+    textoCircularEl.style.cursor = 'grab';
   });
 
-  // ===== Botón Invertir =====
+  // ===== DRAG - Mobile =====
+  textoCircularEl.addEventListener('touchstart', e => {
+    arrastrando = true;
+    inicioX = e.touches[0].clientX;
+  });
+  document.addEventListener('touchmove', e => {
+    if (!arrastrando) return;
+    const delta = e.touches[0].clientX - inicioX;
+    rotacion += delta * 0.4;
+    aplicarTransformaciones();
+    inicioX = e.touches[0].clientX;
+  });
+  document.addEventListener('touchend', () => { arrastrando = false; });
+
+  // ===== INVERTIR TEXTO =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
-    // Actualiza todas las capas: inicial + agregadas
-    actualizarTransform(capaInicial);
-    capasAgregadas.forEach(c => actualizarTransform(c));
+    // Aplicar a inicial
+    aplicarTransformaciones();
+    // Aplicar a capas agregadas
+    capasAgregadas.forEach(capa => {
+      const rotFinal = invertido ? capa.rot + 180 : capa.rot;
+      capa.textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+    });
   });
 
-  // ===== Función para crear capa =====
-  function crearCapa(textoInicial, removable) {
-    capaID++;
+  // ===== FUNCION APLICAR TRANSFORMACIONES INICIAL =====
+  function aplicarTransformaciones() {
+    const rotFinal = invertido ? rotacion + 180 : rotacion;
+    textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+  }
 
-    const grupo = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    grupo.setAttribute("id", `capa-${capaID}`);
+  // ===== AGREGAR NUEVA PALABRA =====
+  agregarCapaBtn.addEventListener('click', () => {
+    const nuevaPalabra = prompt("Escribí la nueva palabra:");
+    if (!nuevaPalabra) return;
 
-    const textEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    textEl.setAttribute("font-size", "26");
-    textEl.setAttribute("fill", "#000");
-    textEl.setAttribute("dominant-baseline", "middle");
-    textEl.style.cursor = 'grab';
+    const nuevoText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    nuevoText.setAttribute("font-size", "26");
+    nuevoText.setAttribute("fill", "#000");
+    nuevoText.setAttribute("dominant-baseline", "middle");
+    nuevoText.style.cursor = 'grab';
 
     const textPath = document.createElementNS("http://www.w3.org/2000/svg", "textPath");
-    textPath.setAttribute("href", "#textoCircularExterior");
+    textPath.setAttribute("href", "#textoCircular");
     textPath.setAttribute("startOffset", "50%");
     textPath.setAttribute("text-anchor", "middle");
-    textPath.textContent = textoInicial;
+    textPath.textContent = nuevaPalabra;
 
-    textEl.appendChild(textPath);
-    grupo.appendChild(textEl);
-    capasContenedor.appendChild(grupo);
+    nuevoText.appendChild(textPath);
+    capasSVG.appendChild(nuevoText);
 
-    const controlesDiv = document.createElement("div");
-    controlesDiv.classList.add("capa-controles");
+    // Estado por capa
+    let rot = 0;
+    let arrastrandoCapa = false;
+    let inicioXCapa = 0;
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = textoInicial;
-    input.placeholder = "Escribí tu texto";
-    input.addEventListener('input', () => {
-      textPath.textContent = input.value;
-    });
-
-    controlesDiv.appendChild(input);
-    document.querySelector(".contenedor").appendChild(controlesDiv);
-
-    // ===== Estado por capa =====
-    let arrastrando = false;
-    let inicioX = 0;
-    let rotacion = 0;
-
-    // Drag Desktop
-    textEl.addEventListener('mousedown', e => {
-      arrastrando = true;
-      inicioX = e.clientX;
-      textEl.style.cursor = 'grabbing';
+    // Drag desktop
+    nuevoText.addEventListener('mousedown', e => {
+      arrastrandoCapa = true;
+      inicioXCapa = e.clientX;
+      nuevoText.style.cursor = 'grabbing';
       e.preventDefault();
     });
-
     document.addEventListener('mousemove', e => {
-      if (!arrastrando) return;
-      const delta = e.clientX - inicioX;
-      rotacion += delta * 0.4;
-      actualizarTransform({textEl, rotacion});
-      inicioX = e.clientX;
+      if (!arrastrandoCapa) return;
+      const delta = e.clientX - inicioXCapa;
+      rot += delta * 0.4;
+      const rotFinal = invertido ? rot + 180 : rot;
+      nuevoText.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+      inicioXCapa = e.clientX;
     });
-
     document.addEventListener('mouseup', () => {
-      arrastrando = false;
-      textEl.style.cursor = 'grab';
+      arrastrandoCapa = false;
+      nuevoText.style.cursor = 'grab';
     });
 
-    // Drag Mobile
-    textEl.addEventListener('touchstart', e => {
-      arrastrando = true;
-      inicioX = e.touches[0].clientX;
+    // Drag mobile
+    nuevoText.addEventListener('touchstart', e => {
+      arrastrandoCapa = true;
+      inicioXCapa = e.touches[0].clientX;
     });
-
     document.addEventListener('touchmove', e => {
-      if (!arrastrando) return;
-      const delta = e.touches[0].clientX - inicioX;
-      rotacion += delta * 0.4;
-      actualizarTransform({textEl, rotacion});
-      inicioX = e.touches[0].clientX;
+      if (!arrastrandoCapa) return;
+      const delta = e.touches[0].clientX - inicioXCapa;
+      rot += delta * 0.4;
+      const rotFinal = invertido ? rot + 180 : rot;
+      nuevoText.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+      inicioXCapa = e.touches[0].clientX;
     });
+    document.addEventListener('touchend', () => { arrastrandoCapa = false; });
 
-    document.addEventListener('touchend', () => {
-      arrastrando = false;
-    });
+    capasAgregadas.push({textEl: nuevoText, rot});
+  });
 
-    actualizarTransform({textEl, rotacion});
-
-    const capaObj = {grupo, controlesDiv, textEl, rotacion};
-
-    if (removable) {
-      capasAgregadas.push(capaObj);
-    } else {
-      capaInicial = capaObj;
-    }
-
-    return capaObj;
-  }
-
-  // ===== Función que aplica rotación + invertido =====
-  function actualizarTransform(capa) {
-    const rotFinal = invertido ? capa.rotacion + 180 : capa.rotacion;
-    capa.textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-  }
-
+  // ===== PAPELERA - Quitar última palabra =====
+  papeleraBtn.addEventListener('click', () => {
+    if (capasAgregadas.length === 0) return;
+    const ultima = capasAgregadas.pop();
+    capasSVG.removeChild(ultima.textEl);
+  });
 });
