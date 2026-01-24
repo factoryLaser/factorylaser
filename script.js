@@ -21,57 +21,60 @@ document.addEventListener('DOMContentLoaded', () => {
     textoPreview.textContent = textoInput.value || 'TU TEXTO ACÁ';
   });
 
-  // ===== DRAG - Desktop =====
+  // ===== DRAG - Desktop y Mobile =====
   textoCircularEl.style.cursor = 'grab';
-  textoCircularEl.addEventListener('mousedown', e => {
-    arrastrando = true;
-    inicioX = e.clientX;
-    textoCircularEl.style.cursor = 'grabbing';
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', e => {
-    if (!arrastrando) return;
-    const delta = e.clientX - inicioX;
-    rotacion += delta * 0.4;
-    aplicarTransformaciones();
-    inicioX = e.clientX;
-  });
-  document.addEventListener('mouseup', () => {
-    arrastrando = false;
-    textoCircularEl.style.cursor = 'grab';
-  });
+  const setupDrag = (el, state) => {
+    el.addEventListener('mousedown', e => {
+      state.arrastrando = true;
+      state.inicioX = e.clientX;
+      el.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!state.arrastrando) return;
+      const delta = e.clientX - state.inicioX;
+      state.rot += delta * 0.4;
+      const rotFinal = invertido ? state.rot + 180 : state.rot;
+      el.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+      state.inicioX = e.clientX;
+    });
+    document.addEventListener('mouseup', () => {
+      state.arrastrando = false;
+      el.style.cursor = 'grab';
+    });
 
-  // ===== DRAG - Mobile =====
-  textoCircularEl.addEventListener('touchstart', e => {
-    arrastrando = true;
-    inicioX = e.touches[0].clientX;
-  });
-  document.addEventListener('touchmove', e => {
-    if (!arrastrando) return;
-    const delta = e.touches[0].clientX - inicioX;
-    rotacion += delta * 0.4;
-    aplicarTransformaciones();
-    inicioX = e.touches[0].clientX;
-  });
-  document.addEventListener('touchend', () => { arrastrando = false; });
+    el.addEventListener('touchstart', e => {
+      state.arrastrando = true;
+      state.inicioX = e.touches[0].clientX;
+    });
+    document.addEventListener('touchmove', e => {
+      if (!state.arrastrando) return;
+      const delta = e.touches[0].clientX - state.inicioX;
+      state.rot += delta * 0.4;
+      const rotFinal = invertido ? state.rot + 180 : state.rot;
+      el.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
+      state.inicioX = e.touches[0].clientX;
+    });
+    document.addEventListener('touchend', () => { state.arrastrando = false; });
+  };
 
-  // ===== INVERTIR TEXTO =====
+  // Inicial
+  setupDrag(textoCircularEl, {arrastrando: false, inicioX: 0, rot: 0});
+
+  // ===== INVERTIR TEXTO (funciona como antes) =====
   invertirBtn.addEventListener('click', () => {
     invertido = !invertido;
-    // Aplicar a inicial
-    aplicarTransformaciones();
+
+    // Aplicar a palabra inicial
+    const rotInicial = invertido ? rotacion + 180 : rotacion;
+    textoCircularEl.setAttribute('transform', `rotate(${rotInicial} 210 210)`);
+
     // Aplicar a capas agregadas
     capasAgregadas.forEach(capa => {
       const rotFinal = invertido ? capa.rot + 180 : capa.rot;
       capa.textEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
     });
   });
-
-  // ===== FUNCION APLICAR TRANSFORMACIONES INICIAL =====
-  function aplicarTransformaciones() {
-    const rotFinal = invertido ? rotacion + 180 : rotacion;
-    textoCircularEl.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-  }
 
   // ===== AGREGAR NUEVA PALABRA =====
   agregarCapaBtn.addEventListener('click', () => {
@@ -94,46 +97,10 @@ document.addEventListener('DOMContentLoaded', () => {
     capasSVG.appendChild(nuevoText);
 
     // Estado por capa
-    let rot = 0;
-    let arrastrandoCapa = false;
-    let inicioXCapa = 0;
+    let capaState = {textEl: nuevoText, rot: 0, arrastrando: false, inicioX: 0};
+    setupDrag(nuevoText, capaState);
 
-    // Drag desktop
-    nuevoText.addEventListener('mousedown', e => {
-      arrastrandoCapa = true;
-      inicioXCapa = e.clientX;
-      nuevoText.style.cursor = 'grabbing';
-      e.preventDefault();
-    });
-    document.addEventListener('mousemove', e => {
-      if (!arrastrandoCapa) return;
-      const delta = e.clientX - inicioXCapa;
-      rot += delta * 0.4;
-      const rotFinal = invertido ? rot + 180 : rot;
-      nuevoText.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-      inicioXCapa = e.clientX;
-    });
-    document.addEventListener('mouseup', () => {
-      arrastrandoCapa = false;
-      nuevoText.style.cursor = 'grab';
-    });
-
-    // Drag mobile
-    nuevoText.addEventListener('touchstart', e => {
-      arrastrandoCapa = true;
-      inicioXCapa = e.touches[0].clientX;
-    });
-    document.addEventListener('touchmove', e => {
-      if (!arrastrandoCapa) return;
-      const delta = e.touches[0].clientX - inicioXCapa;
-      rot += delta * 0.4;
-      const rotFinal = invertido ? rot + 180 : rot;
-      nuevoText.setAttribute('transform', `rotate(${rotFinal} 210 210)`);
-      inicioXCapa = e.touches[0].clientX;
-    });
-    document.addEventListener('touchend', () => { arrastrandoCapa = false; });
-
-    capasAgregadas.push({textEl: nuevoText, rot});
+    capasAgregadas.push(capaState);
   });
 
   // ===== PAPELERA - Quitar última palabra =====
