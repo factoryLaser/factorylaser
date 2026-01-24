@@ -5,14 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const invertirBtn = document.getElementById('invertirBtn');
   const agregarCapaBtn = document.getElementById('agregarCapaBtn');
   const papeleraBtn = document.getElementById('papeleraBtn');
-  const capasSVG = document.getElementById('capasTexto'); // contenedor de capas
+  const capasSVG = document.getElementById('capasTexto');
 
   // ===== ESTADO =====
   let arrastrando = false;
   let inicioX = 0;
   let rotacion = 0;
   let invertido = false;
-
   let capasAgregadas = [];
 
   // ===== TEXTO INICIAL EN TIEMPO REAL =====
@@ -99,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
     nuevoText.appendChild(textPath);
     capasSVG.appendChild(nuevoText);
 
-    // estado por capa
     let capaState = {textEl: nuevoText, rot: 0, arrastrando: false, inicioX: 0};
     setupDrag(nuevoText, capaState);
 
