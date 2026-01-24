@@ -12,15 +12,17 @@
 
   <div class="contenedor">
 
-    <!-- Botones para agregar/quitar palabra -->
-    <div class="botones-superiores">
+    <div class="controles">
       <button id="agregarCapaBtn">+ Agregar palabra</button>
       <button id="papeleraBtn">🗑 Quitar última</button>
       <button id="invertirBtn">Invertir texto</button>
     </div>
 
-    <svg id="preview" viewBox="0 0 420 420">
+    <div>
+      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
+    </div>
 
+    <svg id="preview" viewBox="0 0 420 420">
       <!-- Borde negro debajo -->
       <circle cx="210" cy="210" r="150" fill="none" stroke="#000" stroke-width="5" />
 
@@ -29,41 +31,26 @@
 
       <!-- Path circular -->
       <defs>
-        <path
-          id="textoCircular"
-          d="M 210,210
-             m -150,0
-             a 150,150 0 1,1 300,0
-             a 150,150 0 1,1 -300,0" />
+        <path id="textoCircular"
+              d="M 210,210
+                 m -150,0
+                 a 150,150 0 1,1 300,0
+                 a 150,150 0 1,1 -300,0" />
       </defs>
 
-      <!-- Palabra inicial -->
-      <text id="textoCircularEl"
-            font-size="26"
-            fill="#000"
-            dominant-baseline="middle">
-        <textPath
-          id="textoPreview"
-          href="#textoCircular"
-          startOffset="50%"
-          text-anchor="middle">
-          TU TEXTO ACÁ
-        </textPath>
-      </text>
-
+      <!-- Contenedor de todas las palabras/capas -->
+      <g id="capasTexto">
+        <!-- palabra inicial -->
+        <text id="textoCircularEl" font-size="26" fill="#000" dominant-baseline="middle">
+          <textPath id="textoPreview" href="#textoCircular" startOffset="50%" text-anchor="middle">
+            TU TEXTO ACÁ
+          </textPath>
+        </text>
+      </g>
     </svg>
-
-    <div class="controles">
-      <label>Texto a grabar</label>
-      <input type="text" id="textoInput" placeholder="Escribí tu texto" maxlength="60" />
-    </div>
-
-    <!-- Contenedor interno para capas agregadas -->
-    <svg id="capasTexto"></svg>
 
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
